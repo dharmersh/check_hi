@@ -4,7 +4,7 @@ from typing import List, Dict
 
 def clean_extracted_data(raw_data: List[Dict]) -> List[Dict]:
     """
-    Clean and standardize the extracted data from images
+    Clean and standardize the extracted data from JSON file
     """
     cleaned_data = []
     
@@ -29,12 +29,15 @@ def clean_extracted_data(raw_data: List[Dict]) -> List[Dict]:
     
     return cleaned_data
 
-def load_data_from_images(image_files: List[str]) -> List[Dict]:
+def load_data_from_json(json_file_path: str = 'data/extracted_data.json') -> List[Dict]:
     """
-    Mock function to represent loading data from image files
-    In a real implementation, you would use OCR to extract the JSON
+    Load data directly from the extracted JSON file
     """
-    # This would be replaced with actual OCR extraction
-    # For now, we'll assume the data is pre-extracted
-    with open('data/extracted_data.json', 'r') as f:
-        return json.load(f)
+    try:
+        with open(json_file_path, 'r') as f:
+            raw_data = json.load(f)
+        return raw_data
+    except FileNotFoundError:
+        raise FileNotFoundError(f"JSON file not found at {json_file_path}")
+    except json.JSONDecodeError:
+        raise ValueError("Invalid JSON format in the extracted data file")
